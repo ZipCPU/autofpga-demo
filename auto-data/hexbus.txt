@@ -1,0 +1,109 @@
+################################################################################
+##
+## Filename: 	hexbus.txt
+##
+## Project:	AutoFPGA basic peripheral demonstration project
+##
+## Purpose:	To describe what needs to be done to make the simplified UART
+##		to Wishbone external bus master (the hexbus) a part of the
+##	main .v and toplevel.v files.
+##
+## Creator:	Dan Gisselquist, Ph.D.
+##		Gisselquist Technology, LLC
+##
+################################################################################
+##
+## Copyright (C) 2017, Gisselquist Technology, LLC
+##
+## This file is part of the AutoFPGA peripheral demonstration project.
+##
+## The AutoFPGA peripheral demonstration project is free software (firmware):
+## you can redistribute it and/or modify it under the terms of the GNU Lesser
+## General Public License as published by the Free Software Foundation, either
+## version 3 of the License, or (at your option) any later version.
+##
+## The AutoFPGA peripheral demonstration project is distributed in the hope
+## that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+## warranty of MERCHANTIBILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU Lesser General Public License for more details.
+##
+## You should have received a copy of the GNU Lesser General Public License along
+## with this program.  (It's in the $(ROOT)/doc directory.  Run make with no
+## target there if the PDF file isn't present.)  If not, see
+## <http://www.gnu.org/licenses/> for a copy.
+##
+## License:	LGPL, v3, as defined and found on www.gnu.org,
+##		http://www.gnu.org/licenses/lgpl.html
+##
+##
+################################################################################
+##
+##
+@PREFIX=hb
+@DEVID=HEXBUS
+@MASTER.TYPE=HOST
+@MASTER.BUS=wb
+@BUS.NAME=wb
+@BUS.CLOCK=clk
+@BUS.WIDTH=32
+@BUS.TYPE=wb
+@$BAUDRATE=1000000
+@$SETUP=@$CLKFREQHZ / @$.BAUDRATE
+@SETUP.FORMAT=24'h%x
+@$SETUPCPP=@$(SETUP)
+@SETUPCPP.FORMAT=0x%08x
+@$BUS_ADDRESS_WIDTH=@$(MASTER.BUS.AWID)
+@MAIN.PORTLIST=
+ 		// UART/host to wishbone interface
+ 		i_host_uart_rx, o_host_uart_tx
+@MAIN.IODECL=
+	input	wire		i_host_uart_rx;
+	output	wire		o_host_uart_tx;
+@MAIN.DEFNS=
+	//
+	//
+	// UART interface
+	//
+	//
+	localparam [23:0] BUSUART = @$SETUP;	// @$BAUDRATE baud
+	//
+	wire	w_ck_uart, w_uart_tx;
+	wire		rx_host_stb;
+	wire	[7:0]	rx_host_data;
+	wire		tx_host_stb;
+	wire	[7:0]	tx_host_data;
+	wire		tx_host_busy;
+@MAIN.INSERT=
+	// The Host USB interface, to be used by the WB-UART bus
+	rxuartlite	#(BUSUART) rcv(i_clk, i_host_uart_rx,
+				rx_host_stb, rx_host_data);
+	txuartlite	#(BUSUART) txv(i_clk, tx_host_stb, tx_host_data,
+				o_host_uart_tx, tx_host_busy);
+
+`ifndef	BUSPIC_ACCESS
+	wire	w_bus_int;
+	assign	w_bus_int = 1'b0;
+`endif
+	wire	[29:0]	wb_tmp_addr;
+	hbbus	genbus(i_clk,
+			rx_host_stb, rx_host_data,
+			wb_cyc, wb_stb, wb_we, wb_tmp_addr, wb_data, wb_sel,
+				wb_ack, wb_stall, wb_err, wb_idata,
+			w_bus_int,
+			tx_host_stb, tx_host_data, tx_host_busy);
+	assign	wb_addr = wb_tmp_addr[(@$BUS_ADDRESS_WIDTH-1):0];
+@SIM.INCLUDE=
+#include "uartsim.h"
+@SIM.CLOCK=clk
+@SIM.DEFNS=
+	UARTSIM	*m_dbgbus;
+@SIM.INIT=
+		m_dbgbus = new UARTSIM(FPGAPORT);
+		m_dbgbus->setup(@$(SETUPCPP));
+@SIM.TICK=
+		m_core->i_host_uart_rx = (*m_dbgbus)(m_core->o_host_uart_tx);
+@RTL.MAKE.GROUP=@$(DEVID)
+@RTL.MAKE.SUBD=../dbgbus/hexbus/rtl
+@RTL.MAKE.FILES= hbbus.v hbdechex.v hbdeword.v hbexec.v hbgenhex.v hbidle.v hbints.v hbnewline.v hbpack.v
+@REGDEFS.H.INSERT=
+static const int	BAUDRATE=@$(BAUDRATE);
