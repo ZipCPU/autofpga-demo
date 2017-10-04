@@ -40,7 +40,7 @@
 ##
 ##
 .PHONY: all
-all:	autodata check-install datestamp rtl sim sw
+all:	autodata check-install datestamp rtl sim sw subs
 #
 # Could also depend upon load, if desired, but not necessary
 AUTODATA := `find auto-data -name "*.txt"`
@@ -102,13 +102,18 @@ autodata: check-autofpga
 	$(call copyif-changed,auto-generated/testb.h,sim/testb.h)
 	$(call copyif-changed,auto-generated/main_tb.cpp,sim/main_tb.cpp)
 
+HEXBUS := dbgbus
+.PHONY: subs
+subs:
+	@bash -c "if [ ! -e $(HEXBUS) ]; then git submodule add https://github.com/ZipCPU/dbgbus; git submodule init; git submodule update; fi"
+
 #
 #
 # Verify that the rtl has no bugs in it, while also creating a Verilator
 # simulation class library that we can then use for simulation
 #
 .PHONY: verilated
-verilated: datestamp check-verilator
+verilated: datestamp check-verilator subs
 	+@$(SUBMAKE) rtl
 
 .PHONY: rtl
@@ -119,7 +124,7 @@ rtl: verilated
 # Build a simulation of this entire design
 #
 .PHONY: sim
-sim: rtl check-gpp
+sim: rtl check-gpp subs
 	+@$(SUBMAKE) sim
 
 #
@@ -127,7 +132,7 @@ sim: rtl check-gpp
 # A master target to build all of the support software
 #
 .PHONY: sw
-sw: check-gpp
+sw: check-gpp subs
 	+@$(SUBMAKE) sw
 
 #
