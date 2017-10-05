@@ -4,7 +4,10 @@
 ##
 ## Project:	AutoFPGA basic peripheral demonstration project
 ##
-## Purpose:	
+## Purpose:	Counts the number of clock ticks since FPGA initialization.
+##		Once the high bit is set, however, it is kept high--allowing
+##	you to know that the counter has rolled over.  As a result, this only
+##	counts the 2^30 clocks after initialization.
 ##
 ## Creator:	Dan Gisselquist, Ph.D.
 ##		Gisselquist Technology, LLC
@@ -42,14 +45,14 @@
 @SLAVE.TYPE=SINGLE
 @SLAVE.BUS=wb
 @MAIN.DEFNS=
-	reg	[31:0]	r_pwrcount_data;
+	reg	[31:0]	r_@$(PREFIX)_data;
 @MAIN.INSERT=
-	initial	r_pwrcount_data = 32'h0;
+	initial	r_@$(PREFIX)_data = 32'h0;
 	always @(posedge i_clk)
-	if (r_pwrcount_data[31])
-		r_pwrcount_data[30:0] <= r_pwrcount_data[30:0] + 1'b1;
+	if (r_@$(PREFIX)_data[31])
+		r_@$(PREFIX)_data[30:0] <= r_@$(PREFIX)_data[30:0] + 1'b1;
 	else
-		r_pwrcount_data[31:0] <= r_pwrcount_data[31:0] + 1'b1;
-	assign	pwrcount_data = r_pwrcount_data;
+		r_@$(PREFIX)_data[31:0] <= r_@$(PREFIX)_data[31:0] + 1'b1;
+	assign	@$(PREFIX)_data = r_@$(PREFIX)_data;
 @REGS.N=1
 @REGS.0= 0 R_PWRCOUNT PWRCOUNT
