@@ -83,6 +83,10 @@ module	main(i_clk, i_reset,
 // As they aren't connected to the toplevel at all, it would
 // be best to use localparam over parameter, but here we don't
 // check
+	// SPIO interface
+	localparam	NBTN=5,
+			NLEDS=8,
+			NSW=8;
 //
 // The next step is to declare all of the various ports that were just
 // listed above.  
@@ -94,10 +98,6 @@ module	main(i_clk, i_reset,
 // verilator lint_off UNUSED
 	input	wire		i_reset;
 	// verilator lint_on UNUSED
-	// SPIO interface
-	localparam	NBTN=5,
-			NLEDS=8,
-			NSW=8;
 	input	wire	[(NSW-1):0]	i_sw;
 	input	wire		i_btnc, i_btnd, i_btnl, i_btnr, i_btnu;
 	output	wire	[(NLEDS-1):0]	o_led;
@@ -161,7 +161,8 @@ module	main(i_clk, i_reset,
 
 	// Bus wb
 	// Wishbone master wire definitions for bus: wb
-	wire		wb_cyc, wb_stb, wb_we, wb_stall, wb_err, 	wb_none_sel;
+	wire		wb_cyc, wb_stb, wb_we, wb_stall, wb_err,
+			wb_none_sel;
 	reg		wb_many_ack;
 	wire	[18:0]	wb_addr;
 	wire	[31:0]	wb_data;
@@ -364,7 +365,8 @@ module	main(i_clk, i_reset,
 			spio_ack, spio_stall, spio_data,
 		i_sw, w_btn, o_led, spio_int);
 `else	// SPIO_ACCESS
-	assign	w_btn    = h0;
+	assign	w_btn    = 0;
+	assign	o_led    = 0;
 
 	// In the case that there is no spio peripheral responding on the wb bus
 	reg	r_spio_ack;

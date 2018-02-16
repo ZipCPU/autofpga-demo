@@ -70,10 +70,6 @@ module	toplevel(i_clk,
 	// key may be left undefined.
 	//
 	input	wire		i_clk;
-	// SPIO interface
-	localparam	NBTN=5,
-			NLEDS=8,
-			NSW=8;
 	input	wire	[(NSW-1):0]	i_sw;
 	input	wire		i_btnc, i_btnd, i_btnl, i_btnr, i_btnu;
 	output	wire	[(NLEDS-1):0]	o_led;
