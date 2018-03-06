@@ -50,6 +50,7 @@ RTLD	:= ../rtl
 VOBJDR	:= $(RTLD)/obj_dir
 VERILATOR_ROOT ?= $(shell bash -c 'verilator -V|grep VERILATOR_ROOT | head -1 | sed -e " s/^.*=\s*//"')
 VROOT	:= $(VERILATOR_ROOT)
+VDEFS   := $(shell ./vversion.sh)
 VINCD   := $(VROOT)/include
 VINC	:= -I$(VINCD) -I$(VINCD)/vltstd -I$(VOBJDR)
 INCS	:= -I../sw -I$(RTLD) $(VINC)
@@ -73,7 +74,7 @@ all:	$(PROGRAMS)
 
 $(OBJDIR)/%.o: %.cpp
 	$(mk-objdir)
-	$(CXX) $(CFLAGS) $(INCS) -c $< -o $@
+	$(CXX) $(CFLAGS) $(VDEFS) $(INCS) -c $< -o $@
 
 $(OBJDIR)/%.o: $(VINCD)/%.cpp
 	$(mk-objdir)
@@ -82,7 +83,7 @@ $(OBJDIR)/%.o: $(VINCD)/%.cpp
 
 MAINOBJS := $(OBJDIR)/automaster_tb.o
 main_tb: $(MAINOBJS) $(SIMOBJECTS) $(VOBJS) $(VOBJDR)/Vmain__ALL.a
-	$(CXX) $(INCS) $^ $(VOBJDR)/Vmain__ALL.a -o $@
+	$(CXX) $(INCS) $(VDEFS) $^ $(VOBJDR)/Vmain__ALL.a -o $@
 
 #
 # The "clean" target, removing any and all remaining build products

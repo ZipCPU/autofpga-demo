@@ -47,6 +47,10 @@ AUTODATA := `find auto-data -name "*.txt"`
 CONSTRAINTS := `find . -name "*.xdc"`
 YYMMDD:=`date +%Y%m%d`
 SUBMAKE:= $(MAKE) --no-print-directory -C
+AUTO := $(wildcard auto-data/*.txt) auto-data/Makefile
+RTL  := $(wildcard rtl/*.v) rtl/Makefile
+SW   := $(wildcard sw/*.h) $(wildcard sw/*.cpp) $(wildcard sw/*.c) sw/Makefile
+YYMMDD:=`date +%Y%m%d`
 
 #
 #
@@ -107,6 +111,9 @@ HEXBUS := dbgbus
 subs:
 	@bash -c "if [ ! -e $(HEXBUS) ]; then git submodule add https://github.com/ZipCPU/dbgbus; git submodule init; git submodule update; fi"
 
+.PHONY: archive
+archive:
+	tar --transform s,^,$(YYMMDD)-demo/, -chjf $(YYMMDD)-demo.tjz $(AUTO) $(RTL) $(SW)
 #
 #
 # Verify that the rtl has no bugs in it, while also creating a Verilator

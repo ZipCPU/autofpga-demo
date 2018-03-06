@@ -360,6 +360,7 @@ module	main(i_clk, i_reset,
 	//
 `ifdef	SPIO_ACCESS
 	assign	w_btn = { i_btnc, i_btnd, i_btnl, i_btnr, i_btnu };
+
 	spio #(.NBTN(NBTN), .NLEDS(NLEDS), .NSW(NSW)) spioi(i_clk,
 		wb_cyc, (wb_stb)&&(spio_sel), wb_we, wb_data, wb_sel,
 			spio_ack, spio_stall, spio_data,
@@ -439,6 +440,9 @@ module	main(i_clk, i_reset,
 			w_bus_int,
 			tx_host_stb, tx_host_data, tx_host_busy);
 	assign	wb_addr = wb_tmp_addr[(19-1):0];
+	//
+	//
+	//
 
 
 endmodule // main.v

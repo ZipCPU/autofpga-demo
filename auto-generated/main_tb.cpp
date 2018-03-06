@@ -58,7 +58,17 @@
 // SIM.DEFINES
 //
 // Looking for string: SIM.DEFINES
-#define	block_ram	v__DOT__bkrami__DOT__mem
+
+// Compatibility definitions for Verilator 3.8 to 3.9
+#ifndef	VVAR
+#ifdef	NEW_VERILATOR
+#define	VVAR(A)	main__DOT_ ## A
+#else
+#define	VVAR(A)	v__DOT_ ## A
+#endif
+#endif
+
+#define	block_ram	VVAR(_bkrami__DOT__mem)
 class	MAINTB : public TESTB<Vmain> {
 public:
 		// SIM.DEFNS
