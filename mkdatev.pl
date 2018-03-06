@@ -95,4 +95,6 @@ EOM
 
 print "`define DATESTAMP 32\'h";
 printf("%04d%02d%02d\n", $nyr, $nmo, $ndy);
+print "`define BUILDTIME 32\'h";
+printf("%04d%02d%02d\n", $nhr, $mn, $sc);
 
