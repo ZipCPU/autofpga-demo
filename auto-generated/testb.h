@@ -15,7 +15,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Copyright (C) 2017, Gisselquist Technology, LLC
+// Copyright (C) 2017-2019, Gisselquist Technology, LLC
 //
 // This file is part of the AutoFPGA peripheral demonstration project.
 //
@@ -44,19 +44,25 @@
 #ifndef	TESTB_H
 #define	TESTB_H
 
+// #define TRACE_FST
+
 #include <stdio.h>
 #include <stdint.h>
+#ifdef	TRACE_FST
+#define	TRACECLASS	VerilatedFstC
+#include <verilated_fst_c.h>
+#else // TRACE_FST
+#define	TRACECLASS	VerilatedVcdC
 #include <verilated_vcd_c.h>
-#include "tbclock.h"
+#endif
 
 template <class VA>	class TESTB {
 public:
 	VA	*m_core;
 	bool		m_changed;
-	VerilatedVcdC*	m_trace;
+	TRACECLASS*	m_trace;
 	bool		m_done;
-	unsigned long	m_time_ps;
-	TBCLOCK	m_clk;
+	uint64_t	m_time_ps;
 
 	TESTB(void) {
 		m_core = new VA;
@@ -64,7 +70,6 @@ public:
 		m_trace    = NULL;
 		m_done     = false;
 		Verilated::traceEverOn(true);
-		m_clk.init(10000);	//  100.00 MHz
 	}
 	virtual ~TESTB(void) {
 		if (m_trace) m_trace->close();
@@ -74,8 +79,10 @@ public:
 
 	virtual	void	opentrace(const char *vcdname) {
 		if (!m_trace) {
-			m_trace = new VerilatedVcdC;
+			m_trace = new TRACECLASS;
 			m_core->trace(m_trace, 99);
+			m_trace->spTrace()->set_time_resolution("ps");
+			m_trace->spTrace()->set_time_unit("ps");
 			m_trace->open(vcdname);
 		}
 	}
@@ -97,35 +104,42 @@ public:
 	}
 
 	virtual	void	tick(void) {
-		m_time_ps+= 10000;
+		// Pre-evaluate, to give verilator a chance
+		// to settle any combinatorial logic that
+		// that may have changed since the last clock
+		// evaluation, and then record that in the
+		// trace.
+		eval();
+		if (m_trace) m_trace->dump(m_time_ps+2500);
 
-		// Make sure we have all of our evaluations complete before the top
-		// of the clock.  This is necessary since some of the 
-		// connection modules may have made changes, for which some
-		// logic depends.  This forces that logic to be recalculated
-		// before the top of the clock.
-		m_changed = true;
-		sim_clk_tick();
-		if (m_changed) {
-			eval();
-			if (m_trace) m_trace->dump(m_time_ps - 2500);
-		}
-
+		// Advance the one simulation clock, clk
 		m_core->i_clk = 1;
+		m_time_ps+= 5000;
 		eval();
-		if (m_trace) m_trace->dump(m_time_ps);
-		m_core->i_clk = 0;
-		eval();
+		// If we are keeping a trace, dump the current state to that
+		// trace now
 		if (m_trace) {
-			m_trace->dump(m_time_ps + 5000);
+			m_trace->dump(m_time_ps);
 			m_trace->flush();
 		}
+
+		// <SINGLE CLOCK ONLY>:
+		// Advance the clock again, so that it has its negative edge
+		m_core->i_clk = 0;
+		m_time_ps+= 5000;
+		eval();
+		if (m_trace) m_trace->dump(m_time_ps);
+
+		// Call to see if any simulation components need
+		// to advance their inputs based upon this clock
+		sim_clk_tick();
 	}
 
 	virtual	void	sim_clk_tick(void) {
-		// Your test fixture should over-ride this
-		// method.  If you change any of the inputs,
-		// either ignore m_changed or set it to true.
+		// AutoFPGA will override this method within main_tb.cpp if any
+		// @SIM.TICK key is present within a design component also
+		// containing a @SIM.CLOCK key identifying this clock.  That
+		// component must also set m_changed to true.
 		m_changed = false;
 	}
 	virtual bool	done(void) {

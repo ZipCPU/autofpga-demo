@@ -14,7 +14,7 @@
 ##
 ################################################################################
 ##
-## Copyright (C) 2015-2017, Gisselquist Technology, LLC
+## Copyright (C) 2015-2019, Gisselquist Technology, LLC
 ##
 ## This file is part of the AutoFPGA peripheral demonstration project.
 ##
@@ -65,7 +65,7 @@ print <<"EOM";
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Copyright (C) 2015-2017, Gisselquist Technology, LLC
+// Copyright (C) 2015-2019, Gisselquist Technology, LLC
 //
 // This file is part of the AutoFPGA peripheral demonstration project.
 //

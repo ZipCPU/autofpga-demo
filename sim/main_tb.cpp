@@ -15,7 +15,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Copyright (C) 2017, Gisselquist Technology, LLC
+// Copyright (C) 2017-2019, Gisselquist Technology, LLC
 //
 // This file is part of the AutoFPGA peripheral demonstration project.
 //
@@ -44,6 +44,10 @@
 //
 // SIM.INCLUDE
 //
+// Any SIM.INCLUDE tags you define will be pasted here.
+// This is useful for guaranteeing any include functions
+// your simulation needs are called.
+//
 // Looking for string: SIM.INCLUDE
 #include "verilated.h"
 #include "Vmain.h"
@@ -56,6 +60,9 @@
 #include "uartsim.h"
 //
 // SIM.DEFINES
+//
+// This tag is useful fr pasting in any #define values that
+// might then control the simulation following.
 //
 // Looking for string: SIM.DEFINES
 
@@ -72,18 +79,37 @@
 class	MAINTB : public TESTB<Vmain> {
 public:
 		// SIM.DEFNS
+		//
+		// If you have any simulation components, create a
+		// SIM.DEFNS tag to have those components defined here
+		// as part of the main_tb.cpp function.
 // Looking for string: SIM.DEFNS
 	UARTSIM	*m_dbgbus;
 	MAINTB(void) {
+		// SIM.INIT
+		//
+		// If your simulation components need to be initialized,
+		// create a SIM.INIT tag.  That tag's value will be pasted
+		// here.
+		//
 		// From hb
 		m_dbgbus = new UARTSIM(FPGAPORT);
 		m_dbgbus->setup(0x00000064);
 	}
 
 	void	reset(void) {
+		// SIM.SETRESET
+		// If your simulation component needs logic before the
+		// tick with reset set, that logic can be placed into
+		// the SIM.SETRESET tag and thus pasted here.
+		//
 // Looking for string: SIM.SETRESET
-		m_core->i_clk = 1;
-		m_core->eval();
+		TESTB<Vmain>::reset();
+		// SIM.CLRRESET
+		// If your simulation component needs logic following the
+		// reset tick, that logic can be placed into the
+		// SIM.CLRRESET tag and thus pasted here.
+		//
 // Looking for string: SIM.CLRRESET
 	}
 
@@ -99,38 +125,50 @@ public:
 	}
 
 	void	tick(void) {
-		if (done())
-			return;
-		// KYSIM.TICK tags
-// Looking for string: SIM.TICK
-		if (m_core->o_simhalt)
-			exit(EXIT_SUCCESS);
-		m_core->i_host_uart_rx = (*m_dbgbus)(m_core->o_host_uart_tx);
-		TESTB<Vmain>::tick();
-
-		bool	writeout = false;
-
-			// KYSIM.DBGCONDITION tags
-// Looking for string: SIM.DBGCONDITION
-
-			if (writeout) {
-					// KYSIM.DEBUG tags
-// Looking for string: SIM.DEBUG
-		}
+		TESTB<Vmain>::tick(); // Clock.size = 1
 	}
 
+
+	// Evaluating clock clk
+
+	// sim_clk_tick() will be called from TESTB<Vmain>::tick()
+	//   following any falling edge of clock clk
+	virtual	void	sim_clk_tick(void) {
+		// Default clock tick
+		//
+		// SIM.TICK tags go here for SIM.CLOCK=clk
+		//
+		// SIM.TICK from simhalt
+		if (m_core->o_simhalt)
+			exit(EXIT_SUCCESS);
+		// SIM.TICK from hb
+		m_core->i_host_uart_rx = (*m_dbgbus)(m_core->o_host_uart_tx);
+	}
+	inline	void	tick_clk(void) {	tick();	}
+
+	//
+	// The load function
+	//
+	// This function is required by designs that need the flash or memory
+	// set prior to run time.  The test harness should be able to call
+	// this function to load values into any (memory-type) location
+	// on the bus.
+	//
 	bool	load(uint32_t addr, const char *buf, uint32_t len) {
-		uint32_t	start, offset, wlen, base, naddr;
+		uint32_t	start, offset, wlen, base, adrln;
 
-		base  = 0x00100000;
-		naddr = 0x00040000;
+		//
+		// Loading the bkram component
+		//
+		base  = 0x00100000; // in octets
+		adrln = 0x00100000;
 
-		if ((addr >= base)&&(addr < base + naddr)) {
+		if ((addr >= base)&&(addr < base + adrln)) {
 			// If the start access is in bkram
 			start = (addr > base) ? (addr-base) : 0;
 			offset = (start + base) - addr;
-			wlen = (len-offset > naddr - start)
-				? (naddr - start) : len - offset;
+			wlen = (len-offset > adrln - start)
+				? (adrln - start) : len - offset;
 #ifdef	BKRAM_ACCESS
 			// FROM bkram.SIM.LOAD
 			start = start & (-4);
@@ -144,12 +182,16 @@ public:
 			delete	bswapd;
 			// AUTOFPGA::Now clean up anything else
 			// Was there more to write than we wrote?
-			if (addr + len > base + naddr)
-				return load(base + naddr, &buf[offset+wlen], len-wlen);
+			if (addr + len > base + adrln)
+				return load(base + adrln, &buf[offset+wlen], len-wlen);
 			return true;
 #else	// BKRAM_ACCESS
 			return false;
 #endif	// BKRAM_ACCESS
+		//
+		// End of components with a SIM.LOAD tag, and a
+		// non-zero number of addresses (NADDR)
+		//
 		}
 
 		return false;
@@ -157,6 +199,10 @@ public:
 
 	//
 	// KYSIM.METHODS
+	//
+	// If your simulation code will need to call any of its own function
+	// define this tag by those functions (or other sim code), and
+	// it will be pasated here.
 	//
 // Looking for string: SIM.METHODS
 

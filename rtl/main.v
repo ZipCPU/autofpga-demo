@@ -16,7 +16,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Copyright (C) 2017, Gisselquist Technology, LLC
+// Copyright (C) 2017-2019, Gisselquist Technology, LLC
 //
 // This file is part of the AutoFPGA peripheral demonstration project.
 //
@@ -95,7 +95,7 @@ module	main(i_clk, i_reset,
 // @MAIN.IODECL keys.
 //
 	input	wire		i_clk;
-// verilator lint_off UNUSED
+	// verilator lint_off UNUSED
 	input	wire		i_reset;
 	// verilator lint_on UNUSED
 	input	wire	[(NSW-1):0]	i_sw;
@@ -106,7 +106,7 @@ module	main(i_clk, i_reset,
 	output	wire		o_host_uart_tx;
 	// Make Verilator happy ... defining bus wires for lots of components
 	// often ends up with unused wires lying around.  We'll turn off
-	// Verilator's lint warning here that checks for unused wires.
+	// Ver1lator's lint warning here that checks for unused wires.
 	// verilator lint_off UNUSED
 
 
@@ -171,39 +171,39 @@ module	main(i_clk, i_reset,
 	reg		wb_ack;
 
 	// Wishbone slave definitions for bus wb(SIO), slave buserr
-	wire		buserr_sel, buserr_ack, buserr_stall;
+	wire		buserr_sel, buserr_stall, buserr_ack;
 	wire	[31:0]	buserr_data;
 
 	// Wishbone slave definitions for bus wb(SIO), slave fixdata
-	wire		fixdata_sel, fixdata_ack, fixdata_stall;
+	wire		fixdata_sel, fixdata_stall, fixdata_ack;
 	wire	[31:0]	fixdata_data;
 
 	// Wishbone slave definitions for bus wb(SIO), slave pwrcount
-	wire		pwrcount_sel, pwrcount_ack, pwrcount_stall;
+	wire		pwrcount_sel, pwrcount_stall, pwrcount_ack;
 	wire	[31:0]	pwrcount_data;
 
 	// Wishbone slave definitions for bus wb(SIO), slave rawreg
-	wire		rawreg_sel, rawreg_ack, rawreg_stall;
+	wire		rawreg_sel, rawreg_stall, rawreg_ack;
 	wire	[31:0]	rawreg_data;
 
 	// Wishbone slave definitions for bus wb(SIO), slave simhalt
-	wire		simhalt_sel, simhalt_ack, simhalt_stall;
+	wire		simhalt_sel, simhalt_stall, simhalt_ack;
 	wire	[31:0]	simhalt_data;
 
 	// Wishbone slave definitions for bus wb(SIO), slave spio
-	wire		spio_sel, spio_ack, spio_stall;
+	wire		spio_sel, spio_stall, spio_ack;
 	wire	[31:0]	spio_data;
 
 	// Wishbone slave definitions for bus wb(SIO), slave version
-	wire		version_sel, version_ack, version_stall;
+	wire		version_sel, version_stall, version_ack;
 	wire	[31:0]	version_data;
 
 	// Wishbone slave definitions for bus wb, slave wb_sio
-	wire		wb_sio_sel, wb_sio_ack, wb_sio_stall;
+	wire		wb_sio_sel, wb_sio_stall, wb_sio_ack;
 	wire	[31:0]	wb_sio_data;
 
 	// Wishbone slave definitions for bus wb, slave bkram
-	wire		bkram_sel, bkram_ack, bkram_stall;
+	wire		bkram_sel, bkram_stall, bkram_ack;
 	wire	[31:0]	bkram_data;
 
 
@@ -220,16 +220,16 @@ module	main(i_clk, i_reset,
 	//
 	//
 	
-	assign	      buserr_sel = ((wb_sio_sel)&&(wb_addr[ 2: 0] ==  3'h0));
-	assign	     fixdata_sel = ((wb_sio_sel)&&(wb_addr[ 2: 0] ==  3'h1));
-	assign	    pwrcount_sel = ((wb_sio_sel)&&(wb_addr[ 2: 0] ==  3'h2));
-	assign	      rawreg_sel = ((wb_sio_sel)&&(wb_addr[ 2: 0] ==  3'h3));
-	assign	     simhalt_sel = ((wb_sio_sel)&&(wb_addr[ 2: 0] ==  3'h4));
-	assign	        spio_sel = ((wb_sio_sel)&&(wb_addr[ 2: 0] ==  3'h5));
-	assign	     version_sel = ((wb_sio_sel)&&(wb_addr[ 2: 0] ==  3'h6));
-	assign	      wb_sio_sel = ((wb_addr[18:17] &  2'h3) ==  2'h1);
+	assign	      buserr_sel = ((wb_sio_sel)&&(wb_addr[ 2: 0] ==  3'h0));  // 0x00000
+	assign	     fixdata_sel = ((wb_sio_sel)&&(wb_addr[ 2: 0] ==  3'h1));  // 0x00004
+	assign	    pwrcount_sel = ((wb_sio_sel)&&(wb_addr[ 2: 0] ==  3'h2));  // 0x00008
+	assign	      rawreg_sel = ((wb_sio_sel)&&(wb_addr[ 2: 0] ==  3'h3));  // 0x0000c
+	assign	     simhalt_sel = ((wb_sio_sel)&&(wb_addr[ 2: 0] ==  3'h4));  // 0x00010
+	assign	        spio_sel = ((wb_sio_sel)&&(wb_addr[ 2: 0] ==  3'h5));  // 0x00014
+	assign	     version_sel = ((wb_sio_sel)&&(wb_addr[ 2: 0] ==  3'h6));  // 0x00018
+	assign	      wb_sio_sel = ((wb_addr[18:17] &  2'h3) ==  2'h1); // 0x80000 - 0x8001f
 //x2	Was a master bus as well
-	assign	       bkram_sel = ((wb_addr[18:17] &  2'h2) ==  2'h2);
+	assign	       bkram_sel = ((wb_addr[18:17] &  2'h2) ==  2'h2); // 0x100000 - 0x1fffff
 	//
 
 	//
@@ -263,28 +263,31 @@ module	main(i_clk, i_reset,
 			default: wb_many_ack <= (wb_cyc);
 		endcase
 
+	reg		r_wb_sio_ack;
+	reg	[31:0]	r_wb_sio_data;
+
 	assign	wb_sio_stall = 1'b0;
+
 	initial r_wb_sio_ack = 1'b0;
 	always	@(posedge i_clk)
 		r_wb_sio_ack <= (wb_stb)&&(wb_sio_sel);
 	assign	wb_sio_ack = r_wb_sio_ack;
-	reg	r_wb_sio_ack;
-	reg	[31:0]	r_wb_sio_data;
+
 	always	@(posedge i_clk)
-		// mask        = 00000007
-		// lgdw        = 2
-		// unused_lsbs = 0
-		casez( wb_addr[2:0] )
-			3'h0: r_wb_sio_data <= buserr_data;
-			3'h1: r_wb_sio_data <= fixdata_data;
-			3'h2: r_wb_sio_data <= pwrcount_data;
-			3'h3: r_wb_sio_data <= rawreg_data;
-			3'h4: r_wb_sio_data <= simhalt_data;
-			3'h5: r_wb_sio_data <= spio_data;
-			default: r_wb_sio_data <= version_data;
-		endcase
+	casez( wb_addr[2:0] )
+		3'h0: r_wb_sio_data <= buserr_data;
+		3'h1: r_wb_sio_data <= fixdata_data;
+		3'h2: r_wb_sio_data <= pwrcount_data;
+		3'h3: r_wb_sio_data <= rawreg_data;
+		3'h4: r_wb_sio_data <= simhalt_data;
+		3'h5: r_wb_sio_data <= spio_data;
+		default: r_wb_sio_data <= version_data;
+	endcase
 	assign	wb_sio_data = r_wb_sio_data;
 
+	//
+	// No class DOUBLE peripherals on the "wb" bus
+	//
 	//
 	// Finally, determine what the response is from the wb bus
 	// bus
@@ -316,8 +319,11 @@ module	main(i_clk, i_reset,
 	// true.  Although we might choose to return zeros in that case, by
 	// returning something we can skimp a touch on the logic.
 	//
-	// Any peripheral component with a @SLAVE.TYPE value will be listed
-	// here.
+	// Any peripheral component with a @SLAVE.TYPE value of either OTHER
+	// or MEMORY will automatically be listed here.  In addition, the
+	// bus responses from @SLAVE.TYPE SINGLE (_sio_) and/or DOUBLE
+	// (_dio_) may also be listed here, depending upon components are
+	// connected to them.
 	//
 	always @(posedge i_clk)
 		if (wb_sio_ack)
@@ -370,12 +376,9 @@ module	main(i_clk, i_reset,
 	assign	o_led    = 0;
 
 	// In the case that there is no spio peripheral responding on the wb bus
-	reg	r_spio_ack;
-	initial	r_spio_ack = 1'b0;
-	always @(posedge i_clk)	r_spio_ack <= (wb_stb)&&(spio_sel);
-	assign	spio_ack   = r_spio_ack;
 	assign	spio_stall = 0;
 	assign	spio_data  = 0;
+	assign	spio_ack   = (wb_stb) && (spio_sel);
 
 	assign	spio_int = 1'b0;	// spio.INT.SPIO.WIRE
 `endif	// SPIO_ACCESS
@@ -408,12 +411,9 @@ module	main(i_clk, i_reset,
 `else	// BKRAM_ACCESS
 
 	// In the case that there is no bkram peripheral responding on the wb bus
-	reg	r_bkram_ack;
-	initial	r_bkram_ack = 1'b0;
-	always @(posedge i_clk)	r_bkram_ack <= (wb_stb)&&(bkram_sel);
-	assign	bkram_ack   = r_bkram_ack;
 	assign	bkram_stall = 0;
 	assign	bkram_data  = 0;
+	assign	bkram_ack   = (wb_stb) && (bkram_sel);
 
 `endif	// BKRAM_ACCESS
 
@@ -440,9 +440,6 @@ module	main(i_clk, i_reset,
 			w_bus_int,
 			tx_host_stb, tx_host_data, tx_host_busy);
 	assign	wb_addr = wb_tmp_addr[(19-1):0];
-	//
-	//
-	//
 
 
 endmodule // main.v

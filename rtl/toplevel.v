@@ -15,7 +15,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Copyright (C) 2017, Gisselquist Technology, LLC
+// Copyright (C) 2017-2019, Gisselquist Technology, LLC
 //
 // This file is part of the AutoFPGA peripheral demonstration project.
 //
@@ -54,7 +54,10 @@
 // any top level logic, the @MAIN.PORTLIST should be sufficent,
 // so the @TOP.PORTLIST key may be left undefined.
 //
-module	toplevel(i_clk,
+// The only exception is that any clocks with CLOCK.TOP tags will
+// also appear in this list
+//
+module	toplevel(
 		// SPIO interface
 		i_sw, i_btnc, i_btnd, i_btnl, i_btnr, i_btnu, o_led,
  		// UART/host to wishbone interface
@@ -69,7 +72,8 @@ module	toplevel(i_clk,
 	// the @MAIN.IODECL key should be sufficient, so the @TOP.IODECL
 	// key may be left undefined.
 	//
-	input	wire		i_clk;
+	// We start with any @CLOCK.TOP keys
+	//
 	input	wire	[(NSW-1):0]	i_sw;
 	input	wire		i_btnc, i_btnd, i_btnl, i_btnr, i_btnu;
 	output	wire	[(NLEDS-1):0]	o_led;
