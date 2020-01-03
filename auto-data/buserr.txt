@@ -43,12 +43,17 @@
 @SLAVE.TYPE=SINGLE
 @SLAVE.BUS=wb
 @MAIN.DEFNS=
-	reg	[@$(SLAVE.BUS.AWID)-1:0]	r_@$(PREFIX)_addr;
+	reg	[@$(hb.MASTER.BUS.AWID)-1:0]	r_@$(PREFIX)_addr;
 @MAIN.INSERT=
+	//
+	// Let's capture the address of the last bus error on the HB master
+	// (i.e. debugging bus) interface
+	//
+	initial	r_@$(PREFIX)_addr = 0;
 	always @(posedge @$(SLAVE.BUS.CLOCK.WIRE))
-		if (@$(SLAVE.BUS.NAME)_err)
-			r_@$(PREFIX)_addr <= @$(SLAVE.BUS.NAME)_addr;
-	assign	@$(PREFIX)_data = { {(@$(SLAVE.BUS.WIDTH)-2-@$(SLAVE.BUS.AWID)){1'b0}},
-			r_@$(PREFIX)_addr, 2'b00 };
+	if (@$(hb.MASTER.PREFIX)_err)
+		r_@$(PREFIX)_addr <= @$(hb.MASTER.PREFIX)_addr;
+	assign	@$(SLAVE.PREFIX)_idata = { {(@$(SLAVE.BUS.WIDTH)-2-@$(hb.MASTER.BUS.AWID)){1'b0}},
+					r_@$(PREFIX)_addr, 2'b00 };
 @REGS.N=1
 @REGS.0= 0 R_BUSERR BUSERR

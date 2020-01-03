@@ -45,10 +45,14 @@
 @MAIN.DEFNS=
 	reg	[31:0]	r_@$(PREFIX)_data;
 @MAIN.INSERT=
+	//
+	// Basic/raw register
+	//
 	initial	r_@$(PREFIX)_data = 32'h0;
 	always @(posedge i_clk)
-		if ((wb_stb)&&(wb_we)&&(@$(PREFIX)_sel))
-			r_@$(PREFIX)_data <= wb_data;
-	assign	@$(PREFIX)_data = r_@$(PREFIX)_data;
+	if (@$(SLAVE.PREFIX)_stb && @$(SLAVE.PREFIX)_we)
+		r_@$(PREFIX)_data <= @$(SLAVE.PREFIX)_data;
+
+	assign	@$(SLAVE.PREFIX)_idata = r_@$(PREFIX)_data;
 @REGS.N=1
 @REGS.0= 0 R_@$(DEVID) @$(DEVID)

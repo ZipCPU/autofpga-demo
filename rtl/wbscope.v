@@ -89,7 +89,7 @@
 //
 module wbscope(i_data_clk, i_ce, i_trigger, i_data,
 	i_wb_clk, i_wb_cyc, i_wb_stb, i_wb_we, i_wb_addr, i_wb_data,
-	o_wb_ack, o_wb_stall, o_wb_data,
+	o_wb_stall, o_wb_ack, o_wb_data,
 	o_interrupt);
 	parameter [4:0]			LGMEM = 5'd10;
 	parameter			BUSW = 32;

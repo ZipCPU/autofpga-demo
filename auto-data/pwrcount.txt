@@ -47,12 +47,17 @@
 @MAIN.DEFNS=
 	reg	[31:0]	r_@$(PREFIX)_data;
 @MAIN.INSERT=
+	//
+	// The power-up counter--counting all of the clocks since startup.
+	// Once the clock sets the high order bit, it remains set--so that
+	// you can keep using the counter to tell time differences if you wish.
+	//
 	initial	r_@$(PREFIX)_data = 32'h0;
 	always @(posedge i_clk)
 	if (r_@$(PREFIX)_data[31])
 		r_@$(PREFIX)_data[30:0] <= r_@$(PREFIX)_data[30:0] + 1'b1;
 	else
 		r_@$(PREFIX)_data[31:0] <= r_@$(PREFIX)_data[31:0] + 1'b1;
-	assign	@$(PREFIX)_data = r_@$(PREFIX)_data;
+	assign	@$(SLAVE.PREFIX)_idata = r_@$(PREFIX)_data;
 @REGS.N=1
 @REGS.0= 0 R_PWRCOUNT PWRCOUNT

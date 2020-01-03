@@ -62,9 +62,12 @@
 @MAIN.INSERT=
 	assign	w_btn = { i_btnc, i_btnd, i_btnl, i_btnr, i_btnu };
 
+	//
+	// A "special-purpose" I/O controller, able to read buttons and
+	// switches, and set LEDs.
+	//
 	spio #(.NBTN(NBTN), .NLEDS(NLEDS), .NSW(NSW)) @$(PREFIX)i(i_clk,
-		wb_cyc, (wb_stb)&&(@$(PREFIX)_sel), wb_we, wb_data, wb_sel,
-			@$(PREFIX)_ack, @$(PREFIX)_stall, @$(PREFIX)_data,
+		@$(SLAVE.PORTLIST),
 		i_sw, w_btn, o_led, spio_int);
 @MAIN.ALT=
 	assign	w_btn    = 0;

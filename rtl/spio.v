@@ -40,7 +40,7 @@
 `default_nettype none
 //
 module	spio(i_clk, i_wb_cyc, i_wb_stb, i_wb_we, i_wb_data, i_wb_sel,
-		o_wb_ack, o_wb_stall, o_wb_data,
+		o_wb_stall, o_wb_ack, o_wb_data,
 		i_sw, i_btn, o_led, o_int);
 	parameter	NLEDS=8, NBTN=8, NSW=8;
 	input	wire			i_clk;

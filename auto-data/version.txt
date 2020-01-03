@@ -45,6 +45,6 @@
 @MAIN.DEFNS=
 `include "builddate.v"
 @MAIN.INSERT=
-	assign	@$(PREFIX)_data = `DATESTAMP;
+	assign	@$(SLAVE.PREFIX)_idata = `DATESTAMP;
 @REGS.N=1
 @REGS.0= 0 R_@$(DEVID) @$(DEVID)

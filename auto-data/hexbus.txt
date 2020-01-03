@@ -41,8 +41,8 @@
 ##
 @PREFIX=hb
 @DEVID=HEXBUS
-@MASTER.TYPE=HOST
 @MASTER.BUS=wb
+@MASTER.TYPE=HOST
 @BUS.NAME=wb
 @BUS.CLOCK=clk
 @BUS.WIDTH=32
@@ -84,14 +84,17 @@
 	wire	w_bus_int;
 	assign	w_bus_int = 1'b0;
 `endif
-	wire	[29:0]	wb_tmp_addr;
-	hbbus	genbus(i_clk,
+
+	//
+	// The debugging bus--translating UART inputs into bus commands
+	// and returning responses over the UART
+	//
+	hbbus	#(.AW(@$(MASTER.BUS.AWID))) genbus(i_clk,
 			rx_host_stb, rx_host_data,
-			wb_cyc, wb_stb, wb_we, wb_tmp_addr, wb_data, wb_sel,
-				wb_ack, wb_stall, wb_err, wb_idata,
+			@$(MASTER.PORTLIST),
 			w_bus_int,
 			tx_host_stb, tx_host_data, tx_host_busy);
-	assign	wb_addr = wb_tmp_addr[(@$BUS_ADDRESS_WIDTH-1):0];
+
 @SIM.INCLUDE=
 #include "uartsim.h"
 @SIM.CLOCK=clk

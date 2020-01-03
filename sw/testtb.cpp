@@ -196,8 +196,9 @@ int main(int argc, char **argv) {
 		m_fpga->writei(R_BKRAM, NTEST, data);
 		for(unsigned k=0; k<NTEST; k++) {
 			v = m_fpga->readio(R_BKRAM+k*4);
+			printf("RAM[%3d]\r", k); fflush(stdout);
 			if (v != data[k]) {
-				printf("RAM[%2d]  : 0x%08x FAIL (!= 0x%08x)\n", k, v, data[k]);
+				printf("RAM[%3d]  : 0x%08x FAIL (!= 0x%08x)\n", k, v, data[k]);
 				fail = true;
 			}
 		}

@@ -43,7 +43,9 @@
 @SLAVE.TYPE=SINGLE
 @SLAVE.BUS=wb
 @TOP.PORTLIST=
+	// The SIMHALT peripheral exposes *NO* top level ports
 @TOP.IODECL=
+	// The SIMHALT peripheral doesn't need to declare any top level ports
 @TOP.DEFNS=
 	wire		w_@$(PREFIX);
 @TOP.MAIN=
@@ -53,13 +55,21 @@
 @MAIN.IODECL=
 	output	reg	o_@$(PREFIX);
 @MAIN.INSERT=
+	//
+	// A simulation only peripheral: SIMHALT.  Sets a one-bit flag,
+	// o_@$(PREFIX), read by the simulator as an indication of when to
+	// halt the simulation.  Makes it easy to halt the simulation from
+	// within the simulator.
+	//
 	initial	o_@$(PREFIX)=1'b0;
 	always @(posedge i_clk)
-		if ((wb_stb)&&(wb_we)&&(@$(PREFIX)_sel))
-			o_@$(PREFIX) <= wb_data[0];
-	assign	@$(PREFIX)_data = 32'h0;
+	if (@$(SLAVE.PREFIX)_stb && @$(SLAVE.PREFIX)_we)
+		o_@$(PREFIX) <= @$(SLAVE.PREFIX)_data[0];
+
+	assign	@$(SLAVE.PREFIX)_idata = 32'h0;
 @REGS.N=1
 @REGS.0= 0 R_@$(DEVID) @$(DEVID)
+@SIM.CLOCK=clk
 @SIM.TICK=
 		if (m_core->o_@$(PREFIX))
 			exit(EXIT_SUCCESS);

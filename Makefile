@@ -107,9 +107,11 @@ autodata: check-autofpga
 	$(call copyif-changed,auto-generated/main_tb.cpp,sim/main_tb.cpp)
 
 HEXBUS := dbgbus
+XBAR   := wb2axip
 .PHONY: subs
 subs:
 	@bash -c "if [ ! -e $(HEXBUS) ]; then git submodule add https://github.com/ZipCPU/dbgbus; git submodule init; git submodule update; fi"
+	@bash -c "if [ ! -e $(XBAR) ]; then git submodule add https://github.com/ZipCPU/wb2axip; git submodule init; git submodule update; fi"
 
 .PHONY: archive
 archive:

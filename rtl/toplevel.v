@@ -60,6 +60,7 @@
 module	toplevel(
 		// SPIO interface
 		i_sw, i_btnc, i_btnd, i_btnl, i_btnr, i_btnu, o_led,
+	// The SIMHALT peripheral exposes *NO* top level ports,
  		// UART/host to wishbone interface
  		i_host_uart_rx, o_host_uart_tx);
 	//
@@ -77,6 +78,7 @@ module	toplevel(
 	input	wire	[(NSW-1):0]	i_sw;
 	input	wire		i_btnc, i_btnd, i_btnl, i_btnr, i_btnu;
 	output	wire	[(NLEDS-1):0]	o_led;
+	// The SIMHALT peripheral doesn't need to declare any top level ports
 	input	wire		i_host_uart_rx;
 	output	wire		o_host_uart_tx;
 

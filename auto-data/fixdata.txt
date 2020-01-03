@@ -43,6 +43,9 @@
 @SLAVE.TYPE=SINGLE
 @SLAVE.BUS=wb
 @MAIN.INSERT=
-	assign	@$(PREFIX)_data = 32'h20170926;
+	//
+	// A basic peripheral serving up a fixed/constant 32-bits of data
+	//
+	assign	@$(SLAVE.PREFIX)_idata = 32'h20170926;
 @REGS.N=1
 @REGS.0= 0 R_@$(DEVID) @$(DEVID)
