@@ -39,7 +39,7 @@
 ##
 ##
 .PHONY: all
-PROGRAMS := wbregs netuart
+PROGRAMS := wbregs testtb netuart
 SCOPES :=
 all: $(PROGRAMS) $(SCOPES)
 CXX := g++
@@ -50,9 +50,9 @@ EXTSRCS := $(BUS).cpp
 LCLSRCS := llcomms.cpp regdefs.cpp
 BUSSRCS := $(LCLSRCS) $(addprefix $(BUSD)/sw/,$(EXTSRCS))
 DEPSRCS := wbregs.cpp netuart.cpp $(BUSSRCS)
-HEADERS := llcomms.h port.h scopecls.h devbus.h $(wildcard $(BUSD)/sw/*.h)
+HEADERS := llcomms.h port.h devbus.h $(wildcard $(BUSD)/sw/*.h)
 BUSOBJS := $(addprefix $(OBJDIR)/,$(subst .cpp,.o,$(LCLSRCS) $(EXTSRCS)))
-CFLAGS := -g -Wall -I. -I../../rtl -I$(BUSD)/sw
+CFLAGS := -g -Wall -I. -I../rtl -I$(BUSD)/sw
 LIBS :=
 SUBMAKE := $(MAKE) --no-print-directory -C
 
@@ -90,11 +90,14 @@ netuart: $(OBJDIR)/netuart.o
 wbregs: $(OBJDIR)/wbregs.o $(BUSOBJS)
 	$(CXX) $(CFLAGS) $^ $(LIBS) -o $@
 
+testtb: $(OBJDIR)/testtb.o $(BUSOBJS)
+	$(CXX) $(CFLAGS) $^ $(LIBS) -o $@
+
 ## SCOPES
 # These depend upon the scopecls.o, the bus objects, as well as their
 # main file(s).
-memscope: $(OBJDIR)/memscope.o $(OBJDIR)/scopecls.o $(BUSOBJS)
-	$(CXX) $(CFLAGS) $^ $(LIBS) -o $@
+# memscope: $(OBJDIR)/memscope.o $(OBJDIR)/scopecls.o $(BUSOBJS)
+# 	$(CXX) $(CFLAGS) $^ $(LIBS) -o $@
 
 define	mk-objdir
 	@bash -c "if [ ! -e $(OBJDIR) ]; then mkdir -p $(OBJDIR); fi"

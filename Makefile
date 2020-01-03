@@ -142,6 +142,12 @@ sim: rtl check-gpp subs
 sw: check-gpp subs
 	+@$(SUBMAKE) sw
 
+.PHONY: test
+test: sim sw
+	@echo
+	@echo "Running a design test"
+	+bash -c "test.sh || true"
+
 #
 #
 # Copy a file from the auto-data directory that had been created by
