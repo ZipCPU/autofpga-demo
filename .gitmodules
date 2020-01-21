@@ -1,6 +1,3 @@
 [submodule "dbgbus"]
 	path = dbgbus
 	url = https://github.com/ZipCPU/dbgbus
-[submodule "wb2axip"]
-	path = wb2axip
-	url = https://github.com/ZipCPU/wb2axip
