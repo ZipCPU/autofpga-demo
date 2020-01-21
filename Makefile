@@ -13,7 +13,7 @@
 ##
 ################################################################################
 ##
-## Copyright (C) 2015-2019, Gisselquist Technology, LLC
+## Copyright (C) 2015-2020, Gisselquist Technology, LLC
 ##
 ## This file is part of the AutoFPGA peripheral demonstration project.
 ##
@@ -110,8 +110,8 @@ HEXBUS := dbgbus
 XBAR   := wb2axip
 .PHONY: subs
 subs:
-	@bash -c "if [ ! -e $(HEXBUS) ]; then git submodule add https://github.com/ZipCPU/dbgbus; git submodule init; git submodule update; fi"
-	@bash -c "if [ ! -e $(XBAR) ]; then git submodule add https://github.com/ZipCPU/wb2axip; git submodule init; git submodule update; fi"
+	@bash -c "if [ ! -e $(HEXBUS)/README.md ]; then git submodule init ; git submodule update; fi"
+	@bash -c "if [ ! -e $(XBAR)/README.md ]; then git submodule init; git submodule update; fi"
 
 .PHONY: archive
 archive:
@@ -148,7 +148,7 @@ sw: check-gpp subs
 test: sim sw
 	@echo
 	@echo "Running a design test"
-	+bash -c "test.sh || true"
+	+bash -c "./test.sh || true"
 
 #
 #

@@ -529,12 +529,12 @@ module	main(i_clk, i_reset,
 `else	// BKRAM_ACCESS
 
 	//
-	// In the case that there is no bkram peripheral
+	// In the case that there is no wb_bkram peripheral
 	// responding on the wb bus
-	assign	bkram_ack   = 1'b0;
-	assign	bkram_err   = (bkram_stb);
-	assign	bkram_stall = 0;
-	assign	bkram_data  = 0;
+	assign	wb_bkram_ack   = 1'b0;
+	assign	wb_bkram_err   = (wb_bkram_stb);
+	assign	wb_bkram_stall = 0;
+	assign	wb_bkram_data  = 0;
 
 `endif	// BKRAM_ACCESS
 
@@ -568,7 +568,7 @@ module	main(i_clk, i_reset,
 			wb_hb_addr[19-1:0],
 			wb_hb_data, // 32 bits wide
 			wb_hb_sel,  // 32/8 bits wide
-		wb_hb_stall,wb_hb_ack, wb_hb_idata,wb_hb_err,
+		wb_hb_stall, wb_hb_ack, wb_hb_idata,wb_hb_err,
 			w_bus_int,
 			tx_host_stb, tx_host_data, tx_host_busy);
 

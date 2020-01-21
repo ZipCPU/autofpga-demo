@@ -57,7 +57,7 @@
 // The only exception is that any clocks with CLOCK.TOP tags will
 // also appear in this list
 //
-module	toplevel(
+module	toplevel(i_clk,
 		// SPIO interface
 		i_sw, i_btnc, i_btnd, i_btnl, i_btnr, i_btnu, o_led,
 	// The SIMHALT peripheral exposes *NO* top level ports,
@@ -75,6 +75,7 @@ module	toplevel(
 	//
 	// We start with any @CLOCK.TOP keys
 	//
+	input	wire		i_clk;
 	input	wire	[(NSW-1):0]	i_sw;
 	input	wire		i_btnc, i_btnd, i_btnl, i_btnr, i_btnu;
 	output	wire	[(NLEDS-1):0]	o_led;
