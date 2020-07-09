@@ -130,7 +130,6 @@ module	main(i_clk, i_reset,
 	// These declarations come from the @MAIN.DEFNS keys found in the
 	// various components comprising the design.
 	//
-// Looking for string: MAIN.DEFNS
 	wire	[(NBTN-1):0]	w_btn;
 `include "builddate.v"
 	reg	[19-1:0]	r_buserr_addr;
@@ -276,14 +275,14 @@ module	main(i_clk, i_reset,
 
 	always	@(posedge i_clk)
 	casez( wb_sio_addr[2:0] )
-		3'h0: r_wb_sio_data <= wb_buserr_idata;
-		3'h1: r_wb_sio_data <= wb_fixdata_idata;
-		3'h2: r_wb_sio_data <= wb_pwrcount_idata;
-		3'h3: r_wb_sio_data <= wb_rawreg_idata;
-		3'h4: r_wb_sio_data <= wb_simhalt_idata;
-		3'h5: r_wb_sio_data <= wb_spio_idata;
-		3'h6: r_wb_sio_data <= wb_version_idata;
-		default: r_wb_sio_data <= wb_version_idata;
+	3'h0: r_wb_sio_data <= wb_buserr_idata;
+	3'h1: r_wb_sio_data <= wb_fixdata_idata;
+	3'h2: r_wb_sio_data <= wb_pwrcount_idata;
+	3'h3: r_wb_sio_data <= wb_rawreg_idata;
+	3'h4: r_wb_sio_data <= wb_simhalt_idata;
+	3'h5: r_wb_sio_data <= wb_spio_idata;
+	3'h6: r_wb_sio_data <= wb_version_idata;
+	default: r_wb_sio_data <= wb_version_idata;
 	endcase
 	assign	wb_sio_idata = r_wb_sio_data;
 
@@ -344,10 +343,16 @@ module	main(i_clk, i_reset,
 	wbxbar #(
 		.NM(1), .NS(2), .AW(19), .DW(32),
 		.SLAVE_ADDR({
+			// Address width    = 19
+			// Address LSBs     = 2
+			// Slave name width = 6
 			{ 19'h40000 }, //  bkram: 0x100000
 			{ 19'h20000 }  // wb_sio: 0x080000
 		}),
 		.SLAVE_MASK({
+			// Address width    = 19
+			// Address LSBs     = 2
+			// Slave name width = 6
 			{ 19'h40000 }, //  bkram
 			{ 19'h60000 }  // wb_sio
 		}),
@@ -477,6 +482,8 @@ module	main(i_clk, i_reset,
 `endif	// SPIO_ACCESS
 
 	assign	wb_version_idata = `DATESTAMP;
+	assign	wb_version_ack   = wb_version_stb;
+	assign	wb_version_stall = 1'b0;
 	//
 	// Let's capture the address of the last bus error on the HB master
 	// (i.e. debugging bus) interface
@@ -511,6 +518,8 @@ module	main(i_clk, i_reset,
 		o_simhalt <= wb_simhalt_data[0];
 
 	assign	wb_simhalt_idata = 32'h0;
+	assign	wb_simhalt_ack   = wb_simhalt_stb;
+	assign	wb_simhalt_stall = 1'b0;
 	//
 	// A basic peripheral serving up a fixed/constant 32-bits of data
 	//
@@ -534,7 +543,7 @@ module	main(i_clk, i_reset,
 	assign	wb_bkram_ack   = 1'b0;
 	assign	wb_bkram_err   = (wb_bkram_stb);
 	assign	wb_bkram_stall = 0;
-	assign	wb_bkram_data  = 0;
+	assign	wb_bkram_idata = 0;
 
 `endif	// BKRAM_ACCESS
 

@@ -23,3 +23,5 @@ octave-workspace
 core
 autofpga.dbg
 lgpl-legal.txt
+20*-demo.tjz
+20*-build.v
