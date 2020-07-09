@@ -46,13 +46,14 @@ CXX := g++
 OBJDIR := obj-pc
 BUS := hexbus
 BUSD:= ../dbgbus/hexbus
+RTLD:= ../rtl
 EXTSRCS := $(BUS).cpp
 LCLSRCS := llcomms.cpp regdefs.cpp
 BUSSRCS := $(LCLSRCS) $(addprefix $(BUSD)/sw/,$(EXTSRCS))
-DEPSRCS := wbregs.cpp netuart.cpp $(BUSSRCS)
-HEADERS := llcomms.h port.h devbus.h $(wildcard $(BUSD)/sw/*.h)
+DEPSRCS := wbregs.cpp netuart.cpp testtb.cpp $(BUSSRCS)
+HEADERS := llcomms.h port.h devbus.h $(wildcard $(BUSD)/sw/*.h) $(wildcard $(RTLD)/*.h)
 BUSOBJS := $(addprefix $(OBJDIR)/,$(subst .cpp,.o,$(LCLSRCS) $(EXTSRCS)))
-CFLAGS := -g -Wall -I. -I../rtl -I$(BUSD)/sw
+CFLAGS := -g -Wall -I. -I$(RTLD) -I$(BUSD)/sw
 LIBS :=
 SUBMAKE := $(MAKE) --no-print-directory -C
 
