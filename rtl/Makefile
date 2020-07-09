@@ -83,7 +83,7 @@ VERILATOR := verilator
 #	--Mdir <dir>	Place our output files into <dir>, or $(VDIRFB) here
 #	-cc	Create C++ output files (in $(VDIRFB)
 #
-VFLAGS= -Wall --MMD -trace $(AUTOVDIRS) -y ../wb2axip/rtl/ --Mdir $(VDIRFB) -cc
+VFLAGS= -Wall -Wno-TIMESCALEMOD --MMD -trace $(AUTOVDIRS) -y ../wb2axip/rtl/ --Mdir $(VDIRFB) -cc
 
 #
 # Now that all of our defines are out of the way, we'll specify two default
