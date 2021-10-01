@@ -1,22 +1,22 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Filename:	llcomms.cpp
-//
+// {{{
 // Project:	dbgbus, a collection of 8b channel to WB bus debugging protocols
 //
 // Purpose:	This is the C++ program on the command side that will interact
 //		with a UART on an FPGA, both sending and receiving characters.
 //	Any bus interaction will call routines from this lower level library
-//	to accomplish the actual connection to and transmission to/from the board.
-//
+//	to accomplish the actual connection to and transmission to/from the
+//	board.
 //
 // Creator:	Dan Gisselquist, Ph.D.
 //		Gisselquist Technology, LLC
 //
 ////////////////////////////////////////////////////////////////////////////////
-//
-// Copyright (C) 2015-2019, Gisselquist Technology, LLC
-//
+// }}}
+// Copyright (C) 2015-2021, Gisselquist Technology, LLC
+// {{{
 // This file is part of the debugging interface demonstration.
 //
 // The debugging interface demonstration is free software (firmware): you can
@@ -33,14 +33,14 @@
 // along with this program.  (It's in the $(ROOT)/doc directory.  Run make
 // with no target there if the PDF file isn't present.)  If not, see
 // <http://www.gnu.org/licenses/> for a copy.
-//
+// }}}
 // License:	LGPL, v3, as defined and found on www.gnu.org,
+// {{{
 //		http://www.gnu.org/licenses/lgpl.html
-//
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
-//
+// }}}
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/stat.h>

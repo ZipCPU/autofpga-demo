@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Filename:	memdev.v
-//
+// {{{
 // Project:	dbgbus, a collection of 8b channel to WB bus debugging protocols
 //
 // Purpose:	This file is really simple: it creates an on-chip memory,
@@ -17,9 +17,9 @@
 //		Gisselquist Technology, LLC
 //
 ////////////////////////////////////////////////////////////////////////////////
-//
-// Copyright (C) 2015-2019, Gisselquist Technology, LLC
-//
+// }}}
+// Copyright (C) 2015-2021, Gisselquist Technology, LLC
+// {{{
 // This file is part of the debugging interface demonstration.
 //
 // The debugging interface demonstration is free software (firmware): you can
@@ -36,14 +36,15 @@
 // along with this program.  (It's in the $(ROOT)/doc directory.  Run make
 // with no target there if the PDF file isn't present.)  If not, see
 // <http://www.gnu.org/licenses/> for a copy.
-//
+// }}}
 // License:	LGPL, v3, as defined and found on www.gnu.org,
+// {{{
 //		http://www.gnu.org/licenses/lgpl.html
-//
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
-//
+`default_nettype none
+// }}}
 module	memdev(i_clk, i_wb_cyc, i_wb_stb, i_wb_we, i_wb_addr, i_wb_data, i_wb_sel,
 		o_wb_stall, o_wb_ack, o_wb_data);
 	parameter	LGMEMSZ=15, DW=32, EXTRACLOCK= 0;

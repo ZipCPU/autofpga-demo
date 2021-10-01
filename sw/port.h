@@ -1,22 +1,21 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Filename:	port.h
-//
+// {{{
 // Project:	AutoFPGA basic peripheral demonstration project
 //
 // Purpose:	Defines the communication parameters necessary for communicating
-//		both with our actual hardware device, as well as with our Verilator
-//	simulation.  The result is that whatever communicates with the other may
-//	not know the difference (as desired).
-//
+//		both with our actual hardware device, as well as with our
+//	Verilator simulation.  The result is that whatever communicates with
+//	the other may not know the difference (as desired).
 //
 // Creator:	Dan Gisselquist, Ph.D.
 //		Gisselquist Technology, LLC
 //
 ////////////////////////////////////////////////////////////////////////////////
-//
-// Copyright (C) 2017-2019, Gisselquist Technology, LLC
-//
+// }}}
+// Copyright (C) 2017-2021, Gisselquist Technology, LLC
+// {{{
 // This file is part of the AutoFPGA peripheral demonstration project.
 //
 // The AutoFPGA peripheral demonstration project is free software (firmware):
@@ -33,14 +32,14 @@
 // along with this program.  (It's in the $(ROOT)/doc directory.  Run make
 // with no target there if the PDF file isn't present.)  If not, see
 // <http://www.gnu.org/licenses/> for a copy.
-//
+// }}}
 // License:	LGPL, v3, as defined and found on www.gnu.org,
+// {{{
 //		http://www.gnu.org/licenses/lgpl.html
-//
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
-//
+// }}}
 #ifndef	PORT_H
 #define	PORT_H
 

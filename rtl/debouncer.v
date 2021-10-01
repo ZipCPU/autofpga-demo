@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Filename: 	debouncer.v
-//
+// {{{
 // Project:	AutoFPGA basic peripheral demonstration project
 //
 // Purpose:	To "debounce" signals from within a group passed to this
@@ -43,9 +43,9 @@
 //		Gisselquist Technology, LLC
 //
 ////////////////////////////////////////////////////////////////////////////////
-//
-// Copyright (C) 2017-2019, Gisselquist Technology, LLC
-//
+// }}}
+// Copyright (C) 2017-2021, Gisselquist Technology, LLC
+// {{{
 // This file is part of the AutoFPGA peripheral demonstration project.
 //
 // The AutoFPGA peripheral demonstration project is free software (firmware):
@@ -62,17 +62,15 @@
 // along with this program.  (It's in the $(ROOT)/doc directory.  Run make
 // with no target there if the PDF file isn't present.)  If not, see
 // <http://www.gnu.org/licenses/> for a copy.
-//
+// }}}
 // License:	LGPL, v3, as defined and found on www.gnu.org,
+// {{{
 //		http://www.gnu.org/licenses/lgpl.html
-//
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
-//
 `default_nettype	none
-//
-//
+// }}}
 module	debouncer(i_clk, i_in, o_debounced);
 	parameter	NIN=16+5, LGWAIT=17;
 	input	wire			i_clk;

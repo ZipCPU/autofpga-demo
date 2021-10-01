@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Filename: 	builddate.v
-//
+// {{{
 // Project:	AutoFPGA basic peripheral demonstration project
 //
 // Purpose:	This file records the date of the last build.  Running "make"
@@ -13,9 +13,9 @@
 //		Gisselquist Technology, LLC
 //
 ////////////////////////////////////////////////////////////////////////////////
-//
-// Copyright (C) 2015-2019, Gisselquist Technology, LLC
-//
+// }}}
+// Copyright (C) 2015-2021, Gisselquist Technology, LLC
+// {{{
 // This file is part of the AutoFPGA peripheral demonstration project.
 //
 // The AutoFPGA peripheral demonstration project is free software (firmware):
@@ -32,13 +32,13 @@
 // along with this program.  (It's in the $(ROOT)/doc directory.  Run make
 // with no target there if the PDF file isn't present.)  If not, see
 // <http://www.gnu.org/licenses/> for a copy.
-//
+// }}}
 // License:	LGPL, v3, as defined and found on www.gnu.org,
+// {{{
 //		http://www.gnu.org/licenses/lgpl.html
-//
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
-//
-`define DATESTAMP 32'h20200709
-`define BUILDTIME 32'h00110539
+// }}}
+`define DATESTAMP 32'h20211001
+`define BUILDTIME 32'h00141300

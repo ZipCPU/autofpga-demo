@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Filename: 	uartsim.cpp
-//
+// {{{
 // Project:	AutoFPGA basic peripheral demonstration project
 //
 // Purpose:	To forward a Verilator simulated UART link over a TCP/IP pipe.
@@ -10,9 +10,9 @@
 //		Gisselquist Technology, LLC
 //
 ////////////////////////////////////////////////////////////////////////////////
-//
-// Copyright (C) 2015-2017, Gisselquist Technology, LLC
-//
+// }}}
+// Copyright (C) 2015-2021, Gisselquist Technology, LLC
+// {{{
 // This file is part of the AutoFPGA peripheral demonstration project.
 //
 // The AutoFPGA peripheral demonstration project is free software (firmware):
@@ -29,14 +29,14 @@
 // along with this program.  (It's in the $(ROOT)/doc directory.  Run make
 // with no target there if the PDF file isn't present.)  If not, see
 // <http://www.gnu.org/licenses/> for a copy.
-//
+// }}}
 // License:	LGPL, v3, as defined and found on www.gnu.org,
+// {{{
 //		http://www.gnu.org/licenses/lgpl.html
-//
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
-//
+// }}}
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
